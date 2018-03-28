@@ -1,6 +1,6 @@
 output_got.csv
 # Specific for this project
-GetOldTweets-python
+GetOldTweets-python/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
