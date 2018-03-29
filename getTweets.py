@@ -24,6 +24,11 @@ endDate = '2017-01-10' #str. "yyyy-mm-dd"
 def scrapeMonth(eD, offsetMonth):
 	startDate = (datetime.strptime(eD, '%Y-%m-%d') - dateutil.relativedelta.relativedelta(months=offsetMonth+1)).strftime('%Y-%m-%d')
 	endDate = (datetime.strptime(eD, '%Y-%m-%d') - dateutil.relativedelta.relativedelta(months=offsetMonth)).strftime('%Y-%m-%d')
+
+	#Fix precision
+	startDate = datetime.datetime.combine(startDate, datetime.time.min)
+	endDate = datetime.datetime.combine(endDate, datetime.time.max)
+	
 	tweets = []
 	if usernames:
 	    for username in usernames:
