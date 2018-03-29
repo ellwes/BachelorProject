@@ -1,8 +1,8 @@
 # BachelorProject
 
 ## Setup
-###Required dependencies
-####GetOldTweets
+### Required dependencies
+#### GetOldTweets
 Get GetOldTweets from https://github.com/Jefferson-Henrique/GetOldTweets-python.  
 Move to the directory GetOldTweets-python and run:  
 
@@ -19,14 +19,14 @@ Now install requirements
 pip install -r requirements.txt
 ```
 
-####VADER
+#### VADER
 Install VADER (Valence Aware Dictionary and sEntiment Reasoner):  
 
 ```
 pip install vaderSentiment
 ```
 
-####Setting up this repos dependencies
+#### Setting up this repos dependencies
 To setup internal imports: (TODO
 
 ```
