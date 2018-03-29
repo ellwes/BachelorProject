@@ -9,6 +9,7 @@ Make sure following dependencies are installed by executing:
 ```
 sudo apt-get update
 sudo apt-get install libxml2-dev libxslt-dev python-dev
+sudo apt-get install libxml2-dev libxslt-dev python-dev lib32z1-dev
 ```
 
 Now install requirements
