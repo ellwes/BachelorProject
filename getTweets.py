@@ -10,12 +10,12 @@ from datetime import datetime, timedelta
 import dateutil.relativedelta
 
 usernames = []
-querySearch = ['nvidia stock']
-newFilePath = 'Data/test.csv'
+querySearch = ['microsoft stock']
+newFilePath = 'Data/facebook1718.csv'
 
 
-offsetMonth = 12*4 #0 is 1 month. 2 is 3 months etc...
-endDate = '2017-01-10' #str. "yyyy-mm-dd"
+offsetMonth = 24*1 #0 is 1 month. 2 is 3 months etc...
+endDate = '2018-03-28' #str. "yyyy-mm-dd"
 
 #
 # Functions
@@ -26,8 +26,8 @@ def scrapeMonth(eD, offsetMonth):
 	endDate = (datetime.strptime(eD, '%Y-%m-%d') - dateutil.relativedelta.relativedelta(months=offsetMonth)).strftime('%Y-%m-%d')
 
 	#Fix precision
-	startDate = datetime.datetime.combine(startDate, datetime.time.min)
-	endDate = datetime.datetime.combine(endDate, datetime.time.max)
+	#startDate = datetime.combine(startDate, datetime.time.min)
+	#endDate = datetime.combine(endDate, datetime.time.max)
 	
 	tweets = []
 	if usernames:
@@ -39,10 +39,10 @@ def scrapeMonth(eD, offsetMonth):
 		        tweets.append(tweet)
 	else:
 		for query in querySearch:
-		tweetCriteria = got.manager.TweetCriteria().setSince(startDate).setUntil(endDate).setQuerySearch(query)
-		tweetsWithCriteria = got.manager.TweetManager.getTweets(tweetCriteria)
-		for tweet in tweetsWithCriteria:
-		    tweets.append(tweet)
+			tweetCriteria = got.manager.TweetCriteria().setSince(startDate).setUntil(endDate).setQuerySearch(query)
+			tweetsWithCriteria = got.manager.TweetManager.getTweets(tweetCriteria)
+			for tweet in tweetsWithCriteria:
+			    tweets.append(tweet)
 	return tweets
 
 def get_lastday(current):
