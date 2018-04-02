@@ -10,11 +10,11 @@ from datetime import datetime, timedelta
 import dateutil.relativedelta
 
 usernames = []
-querySearch = ['microsoft stock']
-newFilePath = 'Data/facebook1718.csv'
+querySearch = ['nvidia stock']
+newFilePath = 'Data/nvidia1318.csv'
 
 
-offsetMonth = 24*1 #0 is 1 month. 2 is 3 months etc...
+offsetMonth = 12*5 #1 is 2 months. 2 is 3 months etc...
 endDate = '2018-03-28' #str. "yyyy-mm-dd"
 
 #
