@@ -6,7 +6,8 @@ from datetime import datetime
 from itertools import groupby
 
 sentences = []
-file_with_data = 'Data/test.csv'
+file_with_data = 'Data/nvidia1318.csv'
+day_precision = 5 #1 means its x-interval will be 1 day between 2 points, n means its x-interval will be n days between 2 points
 
 with open(file_with_data, 'rb') as csvfile:
     fileReader = csv.DictReader(csvfile)
@@ -35,13 +36,20 @@ for key, group in groupby(dates_and_sentiments, lambda x: str(x[0].strftime('%Y-
     score_avg_sentence_per_day.append((key, avg))
 
 
-results = [('2017-01-08', 90.5)] #Placeholder: will later be real result, list. Format: ('YYYY-mm-dd', result)
+results = [('2018-01-28', 0.5)] #Placeholder: will later be real result, list. Format: ('YYYY-mm-dd', result)
 
+i = 0
+curSum = 0
 for score_day in score_avg_sentence_per_day:
     result_to_print = ''
 
     for res in results:
         if res[0] == score_day[0]:
             result_to_print = str(res[1])
-
-    print str(score_day[0]) + ' ' +  str(score_day[1]) + ' ' + result_to_print
+    curSum = curSum + score_day[1]
+    if i % day_precision == day_precision-1:
+    	print str(score_day[0]) + ' ' +  str(curSum / day_precision) + ' ' + result_to_print
+    	curSum = 0
+    else:
+	print str(score_day[0]) + ' ' +  '?' + ' ' + result_to_print
+    i = i + 1
