@@ -1,8 +1,9 @@
 output_got.csv
 # Specific for this project
 GetOldTweets-python/
-Data/
-Plot/
+Data/*
+Plot/*
+Results/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
