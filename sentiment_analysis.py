@@ -6,7 +6,6 @@ from datetime import datetime
 from itertools import groupby
 
 sentences = []
-
 file_with_data = 'Data/' + sys.argv[1] + '.csv'
 day_precision = 1 #1 means its x-interval will be 1 day between 2 points, n means its x-interval will be n days between 2 points
 
