@@ -26,7 +26,7 @@ Install VADER (Valence Aware Dictionary and sEntiment Reasoner):
 pip install vaderSentiment
 ```
 #### SEC-Edgar-Crawler
-Get GetOldTweets from https://github.com/rahulrrixe/sec-edgar.
+Get SEC-Edgar from https://github.com/rahulrrixe/sec-edgar.
 
 ```
 git clone https://github.com/rahulrrixe/sec-edgar.git  
