@@ -7,7 +7,7 @@ from itertools import groupby
 
 sentences = []
 file_with_data = 'Data/nvidia1318.csv'
-day_precision = 5 #1 means its x-interval will be 1 day between 2 points, n means its x-interval will be n days between 2 points
+day_precision = 9 #1 means its x-interval will be 1 day between 2 points, n means its x-interval will be n days between 2 points
 
 with open(file_with_data, 'rb') as csvfile:
     fileReader = csv.DictReader(csvfile)
