@@ -25,6 +25,10 @@ Install VADER (Valence Aware Dictionary and sEntiment Reasoner):
 ```
 pip install vaderSentiment
 ```
+#### GnuPlot
+```
+sudo apt-get install gnuplot-qt rlwrap 
+```
 
 #### Setting up this repos dependencies
 To setup internal imports: (TODO

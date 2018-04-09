@@ -1,4 +1,4 @@
-    
+
 import sys
 sys.path.append('GetOldTweets-python/')
 
@@ -9,13 +9,25 @@ import csv
 from datetime import datetime, timedelta
 import dateutil.relativedelta
 
+i = 1
+query = sys.argv[i]
+i+=i
+while sys.argv[i] != 'query_end':
+	query = query + ' ' + sys.argv[i]
+	i+=1
+
+
 usernames = []
-querySearch = ['nvidia stock']
-newFilePath = 'Data/nvidia1318.csv'
+querySearch = [query]
 
 
-offsetMonth = 12*5 #1 is 2 months. 2 is 3 months etc...
-endDate = '2018-03-28' #str. "yyyy-mm-dd"
+endDate = sys.argv[i+1] #str. "yyyy-mm-dd"
+offsetMonth = int(sys.argv[i+2]) #1 is 2 months. 2 is 3 months etc...
+
+newFilePath = 'Data/' + sys.argv[i+3] + '.csv'
+
+
+
 
 #
 # Functions
@@ -28,15 +40,15 @@ def scrapeMonth(eD, offsetMonth):
 	#Fix precision
 	#startDate = datetime.combine(startDate, datetime.time.min)
 	#endDate = datetime.combine(endDate, datetime.time.max)
-	
+
 	tweets = []
 	if usernames:
 	    for username in usernames:
-		for query in querySearch:
-		    tweetCriteria = got.manager.TweetCriteria().setUsername(username).setSince(startDate).setUntil(endDate).setQuerySearch(query)
-		    tweetsWithCriteria = got.manager.TweetManager.getTweets(tweetCriteria)
-		    for tweet in tweetsWithCriteria:
-		        tweets.append(tweet)
+			for query in querySearch:
+			    tweetCriteria = got.manager.TweetCriteria().setUsername(username).setSince(startDate).setUntil(endDate).setQuerySearch(query)
+			    tweetsWithCriteria = got.manager.TweetManager.getTweets(tweetCriteria)
+			    for tweet in tweetsWithCriteria:
+			        tweets.append(tweet)
 	else:
 		for query in querySearch:
 			tweetCriteria = got.manager.TweetCriteria().setSince(startDate).setUntil(endDate).setQuerySearch(query)

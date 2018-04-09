@@ -1,13 +1,13 @@
 #Prints out the a line for each day with format: YYYY-mm-dd calculated_sentiment ev_report_result
-
+import sys
 import csv
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from datetime import datetime
 from itertools import groupby
 
 sentences = []
-file_with_data = 'Data/nvidia1318.csv'
-day_precision = 9 #1 means its x-interval will be 1 day between 2 points, n means its x-interval will be n days between 2 points
+file_with_data = 'Data/' + sys.argv[1] + '.csv'
+day_precision = 1 #1 means its x-interval will be 1 day between 2 points, n means its x-interval will be n days between 2 points
 
 with open(file_with_data, 'rb') as csvfile:
     fileReader = csv.DictReader(csvfile)
