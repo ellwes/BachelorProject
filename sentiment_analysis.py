@@ -7,8 +7,59 @@ from itertools import groupby
 
 sentences = []
 file_with_data = 'Data/' + sys.argv[1] + '.csv'
+file_with_result = 'Results/' + sys.argv[1] + '.txt'
 day_precision = 1 #1 means its x-interval will be 1 day between 2 points, n means its x-interval will be n days between 2 points
 
+results = [] #Holds the results from the quater reports
+descriptor1 = 'Descriptor1'
+descriptor2 = 'Descriptor2'
+descriptor3 = 'Descriptor3'
+
+
+#functions
+def extractNumbers(s):
+    s = re.findall("\(?\d+\)?" , s)[0]
+    if s[0] == '(':
+        s = '-' + s[1:-1]
+    return s
+
+
+#reads the result from a file
+date = ''
+result1 = '?'
+result2 = '?'
+result3 = '?'
+
+result_file = open(file_with_result, 'r')
+for line in result_file:
+    if line.rstrip().isdigit():
+        #Add result to resutls-list
+        if result1 != '?' or result2 != '?' or result3 != '?':
+            results.append((date, result1, result2, result3));
+            date = ''
+            result1 = '?'
+            result2 = '?'
+            result3 = '?'
+        #Update date
+        date = line[0:4] + '-' + line[4:6] + '-' + line[6:8]
+    elif line[0] == "'":
+        descriptor = re.findall("('.+')", line)[0][1:-1]
+        lastQuater = extractNumbers(re.findall("('\s*\(?\d+\)?\s)" , line)[0])
+        thisQuater = extractNumbers(re.findall("( \(?\d+\)?\s*\n)" , line)[0])
+        if descriptor == descriptor1:
+            result1 = float(thisQuater) - float(lastQuater)
+        elif descriptor == descriptor2:
+            result2 = float(thisQuater) - float(lastQuater)
+        elif descriptor == descriptor3:
+            result3 = float(thisQuater) - float(lastQuater)
+
+if result1 != '?' or result2 != '?' or result3 != '?':
+    results.append((date, result1, result2, result3))
+
+
+
+
+#Reads the date and the comments from file
 with open(file_with_data, 'rb') as csvfile:
     fileReader = csv.DictReader(csvfile)
     for row in fileReader:
@@ -16,8 +67,8 @@ with open(file_with_data, 'rb') as csvfile:
         sentences.insert(0, (datetime_object,row['text']))
 
 
+#Preformes the analysis
 dates_and_sentiments = []
-
 analyzer = SentimentIntensityAnalyzer()
 for sentence in sentences:
     vs = analyzer.polarity_scores(sentence[1])
@@ -25,9 +76,8 @@ for sentence in sentences:
 
 
 
-
+#Calculates the average per day
 score_avg_sentence_per_day = [] #date is on format 'Y-m-d'
-
 for key, group in groupby(dates_and_sentiments, lambda x: str(x[0].strftime('%Y-%m-%d'))):
     score_sentence_per_day = []
     for thing in group:
@@ -36,8 +86,8 @@ for key, group in groupby(dates_and_sentiments, lambda x: str(x[0].strftime('%Y-
     score_avg_sentence_per_day.append((key, avg))
 
 
-results = [('2018-01-28', 0.5)] #Placeholder: will later be real result, list. Format: ('YYYY-mm-dd', result)
 
+#Calculates the average per chosen number of days and prints the avg on first day, ? on the rest of the days
 i = 0
 curSum = 0
 for score_day in score_avg_sentence_per_day:
