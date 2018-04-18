@@ -13,23 +13,29 @@ from bs4 import BeautifulSoup
 
 sys.setrecursionlimit(3000)
 
-qFilePath = 'sec-edgar/SEC-Edgar-Data/'
-companyCode = 'NVDA'    		# company code for apple 
-cik = '1045810'      		# cik code for nvidia
-date = '20180101'       		# date from which filings should be downloaded
-count = 4 * (2018-2014)          # no of filings, 201508
-tableIndex = 6 #There is no implemented logic to automatically identify the right table
+#NVDA 1045810 6
+#TSLA 1318605 7
+#APPL 320193 5
+#BA  12927 5
 
-def scrapeFilings():
-	#TODO wipe old files in directory!
-	shutil.rmtree(qFilePath + '/' + companyCode + '/' + cik + '/10-Q')
+qFilePath = 'sec-edgar/SEC-Edgar-Data/'
+companyCode = 'TSLA'    	# company code for apple 
+cik = '1318605'      		# cik code for nvidia
+date = '20180101'       		# date from which filings should be downloaded
+count = 20          # no of filings
+tableIndex = 11 #There is no implemented logic to automatically identify the right table
+
+def scrapeFilings(companyCode, cik):
+	outputPath = qFilePath + companyCode + '/' + cik + '/10-Q'
+	if os.path.exists(outputPath):
+		shutil.rmtree(outputPath)
 
 	t1 = time.time()
 	
 	# create object
 	seccrawler = SecCrawler()
 	
-	seccrawler.filing_10Q(str(companyCode), str(cik), str(date), str(count))
+	seccrawler.filing_10Q(companyCode, cik, date, count)
 
 	t2 = time.time()
 	print ("Total Time taken: "),
@@ -50,7 +56,7 @@ def testDisplayTable():
 			print(tables[tableIndex])
 			return
 
-def getIncomeStatementData():
+def getIncomeStatementData(tableIndex, companyCode, cik):
 	finalPath = qFilePath + companyCode + '/' + cik + '/' + '10-Q'
 
 	filedAt = ''
@@ -126,20 +132,124 @@ def clearDataField(text, isDecimal):
 	text = text.replace("=", "")
 	return text
 
-scrapeFilings()
-incomeStatementData = getIncomeStatementData()
-#SaveToFIle
-with open('Results/' + companyCode + '-Q10.txt', 'w') as the_file:
-	for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
-		the_file.write(key + '\n')
-		for thing in group:
-			if  0 < len(clearDataField(thing[1], False)):
-				the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
+def doBatchWork(tableIndex, companyCode, cik):
+	scrapeFilings(companyCode, cik)
+	incomeStatementData = getIncomeStatementData(tableIndex, companyCode, cik)
+	#SaveToFIle
+	with open('Results/' + companyCode + '-Q10' + '-' + str(tableIndex) +'.txt', 'w') as the_file:
+		for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
+			the_file.write(key + '\n')
+			for thing in group:
+				if  0 < len(clearDataField(thing[1], False)):
+					the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
+
+	#NASTY TRICK
+	tableIndex = tableIndex - 1
+	incomeStatementData = getIncomeStatementData(tableIndex, companyCode, cik)
+	#SaveToFIle
+	with open('Results/' + companyCode + '-Q10' + '-' + str(tableIndex) +'.txt', 'w') as the_file:
+		for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
+			the_file.write(key + '\n')
+			for thing in group:
+				if  0 < len(clearDataField(thing[1], False)):
+					the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
+
+	#NASTY TRICK
+	tableIndex = tableIndex - 1
+	incomeStatementData = getIncomeStatementData(tableIndex, companyCode, cik)
+	#SaveToFIle
+	with open('Results/' + companyCode + '-Q10' + '-' + str(tableIndex) +'.txt', 'w') as the_file:
+		for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
+			the_file.write(key + '\n')
+			for thing in group:
+				if  0 < len(clearDataField(thing[1], False)):
+					the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
+
+	#NASTY TRICK
+	tableIndex = tableIndex - 1
+	incomeStatementData = getIncomeStatementData(tableIndex, companyCode, cik)
+	#SaveToFIle
+	with open('Results/' + companyCode + '-Q10' + '-' + str(tableIndex) +'.txt', 'w') as the_file:
+		for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
+			the_file.write(key + '\n')
+			for thing in group:
+				if  0 < len(clearDataField(thing[1], False)):
+					the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
+
+	#NASTY TRICK
+	tableIndex = tableIndex - 1
+	incomeStatementData = getIncomeStatementData(tableIndex, companyCode, cik)
+	#SaveToFIle
+	with open('Results/' + companyCode + '-Q10' + '-' + str(tableIndex) +'.txt', 'w') as the_file:
+		for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
+			the_file.write(key + '\n')
+			for thing in group:
+				if  0 < len(clearDataField(thing[1], False)):
+					the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
+
+	#NASTY TRICK
+	tableIndex = tableIndex - 1
+	incomeStatementData = getIncomeStatementData(tableIndex, companyCode, cik)
+	#SaveToFIle
+	with open('Results/' + companyCode + '-Q10' + '-' + str(tableIndex) +'.txt', 'w') as the_file:
+		for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
+			the_file.write(key + '\n')
+			for thing in group:
+				if  0 < len(clearDataField(thing[1], False)):
+					the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
+
+	#NASTY TRICK
+	tableIndex = tableIndex - 1
+	incomeStatementData = getIncomeStatementData(tableIndex, companyCode, cik)
+	#SaveToFIle
+	with open('Results/' + companyCode + '-Q10' + '-' + str(tableIndex) +'.txt', 'w') as the_file:
+		for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
+			the_file.write(key + '\n')
+			for thing in group:
+				if  0 < len(clearDataField(thing[1], False)):
+					the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
+
+	#NASTY TRICK
+	tableIndex = tableIndex - 1
+	incomeStatementData = getIncomeStatementData(tableIndex, companyCode, cik)
+	#SaveToFIle
+	with open('Results/' + companyCode + '-Q10' + '-' + str(tableIndex) +'.txt', 'w') as the_file:
+		for key, group in groupby(incomeStatementData, lambda x: str(x[0])):
+			the_file.write(key + '\n')
+			for thing in group:
+				if  0 < len(clearDataField(thing[1], False)):
+					the_file.write("'" + clearDataField(thing[1], False) + "' " + clearDataField(thing[2], True) + ' ' + clearDataField(thing[3], True) + '\n')
 
 
+def doShit(tableIndex, companyCode, cik):
+	#companyCode = 'EOG'    	# company code for apple 
+	#cik = '821189'      		# cik code for nvidia
 
 
+	companyCode = 'KORS'    	# company code for apple 
+	cik = '1530721'      		# cik code for nvidia
+	tableIndex = 16
 
+	doBatchWork(tableIndex, companyCode, cik)
 
+	companyCode = 'UA'    	# company code for apple 
+	cik = '1336917'      		# cik code for nvidia
+	tableIndex = 11
+
+	doBatchWork(tableIndex, companyCode, cik)
+
+	companyCode = 'GM'    	# company code for apple 
+	cik = '1467858'      		# cik code for nvidia
+	tableIndex = 11
+
+	doBatchWork(tableIndex, companyCode, cik)
+
+	companyCode = 'F'    	# company code for apple 
+	cik = '37996'      		# cik code for nvidia
+	tableIndex = 11
+
+	doBatchWork(tableIndex, companyCode, cik)
+
+doShit(tableIndex, companyCode, cik)
 
 
