@@ -57,4 +57,7 @@ To setup internal imports: (TODO
 ```
 pip install python-dateutil
 ```
+## Usage
+### Combining the scraped tweets
+    awk 'FNR==1 && NR!=1{next;}{print}'  ATVI201804-*.csv > ATVI201804.csv
 
