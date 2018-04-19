@@ -12,9 +12,9 @@ file_with_result = 'Results/' + sys.argv[2] + '-Q-10.txt'
 day_precision = 5 #1 means its x-interval will be 1 day between 2 points, n means its x-interval will be n days between 2 points
 
 results = [] #Holds the results from the quater reports
-descriptor1 = 'Total net revenues'
+descriptor1 = 'Total revenues'
 descriptor2 = 'Net income'
-descriptor3 = 'blaj'
+descriptor3 = 'Diluted'
 
 
 #functions
@@ -45,14 +45,14 @@ for line in result_file:
         date = line[0:4] + '-' + line[4:6] + '-' + line[6:8]
     elif line[0] == "'":
         descriptor = re.findall("('.+')", line)[0][1:-1]
-        lastQuater = extractNumbers(re.findall("('\s*\(?\d*\.?\d+\)?\s)" , line)[0])
-        thisQuater = extractNumbers(re.findall("(\(?\d*\.?\d+\)?\s*\n)" , line)[0])
+        thisQuater = extractNumbers(re.findall("('\s*\(?\d*\.?\d+\)?\s)" , line)[0])
+        lastQuater = extractNumbers(re.findall("(\(?\d*\.?\d+\)?\s*\n)" , line)[0])
         if descriptor == descriptor1:
             result1 = (float(thisQuater) - float(lastQuater))/float(lastQuater)
         elif descriptor == descriptor2:
-            result2 = float(thisQuater) - float(lastQuater)/float(lastQuater)
+            result2 = (float(thisQuater) - float(lastQuater))/float(lastQuater)
         elif descriptor == descriptor3:
-            result3 = float(thisQuater) - float(lastQuater)/float(lastQuater)
+            result3 = (float(thisQuater) - float(lastQuater))/float(lastQuater)
 
 if result1 != '?' or result2 != '?' or result3 != '?':
     results.append((date, result1, result2, result3))
@@ -87,19 +87,41 @@ for key, group in groupby(dates_and_sentiments, lambda x: str(x[0].strftime('%Y-
 
 
 
+#Puts all data in a csv-file in order to find the correlation c oefficient.
+newFilePath = 'Correlation/' + sys.argv[1] + '_correlation.csv'
+with open(newFilePath, 'w') as csvfile:
+    fieldnames = ['date', 'sentiment_value', descriptor1, descriptor2, descriptor3]
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    for score_day in score_avg_sentence_per_day:
+        res1 = ''
+        res2 = ''
+        res3 = ''
+        for res in results:
+            if res[0] == score_day[0]:
+                res1 = res[1]
+                res2 = res[2]
+                res3 = res[3]
+        writer.writerow({'date': score_day[0],  'sentiment_value': score_day[1], descriptor1: res1, descriptor2: res2, descriptor3: res3})
+
+
+
 #Calculates the average per chosen number of days and prints the avg on first day, ? on the rest of the days
 i = 0
 curSum = 0
 for score_day in score_avg_sentence_per_day:
-    result_to_print = ''
-
+    result_to_print1 = '?'
+    result_to_print2 = '?'
+    result_to_print3 = '?'
     for res in results:
         if res[0] == score_day[0]:
-            result_to_print = str(res[1])
+            result_to_print1 = str(res[1])
+            result_to_print2 = str(res[2])
+            result_to_print3 = str(res[3])
     curSum = curSum + score_day[1]
     if i % day_precision == day_precision-1:
-    	print str(score_day[0]) + ' ' +  str(curSum / day_precision) + ' ' + result_to_print
+    	print str(score_day[0]) + ' ' +  str(curSum / day_precision) + ' ' + result_to_print1 + ' ' + result_to_print2+ ' ' + result_to_print3
     	curSum = 0
     else:
-	print str(score_day[0]) + ' ' +  '?' + ' ' + result_to_print
+	print str(score_day[0]) + ' ' +  '?' + ' ' + result_to_print1 + ' ' + result_to_print2+ ' ' + result_to_print3
     i = i + 1
