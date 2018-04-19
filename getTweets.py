@@ -5,7 +5,7 @@ sys.path.append('GetOldTweets-python/')
 import got
 import json
 import csv
-import shutil
+import os
 
 from datetime import datetime, timedelta
 import dateutil.relativedelta
@@ -60,13 +60,13 @@ def scrapeMonth(eD, offsetMonth):
 	return tweets
 
 def scrapeWithRetry(eD, offsetMonth):
-	scrapeSuccessful = false
+	scrapeSuccessful = False
 	while not scrapeSuccessful:
 		try:
-			return scrapeWithRetry
-			scrapeSuccessful = true
+			return scrapeMonth(eD, offsetMonth)
+			scrapeSuccessful = True
 			break
-		except ValueError:
+		except:
 			print("Failed retrying again")
 
 def get_lastday(current):
@@ -80,7 +80,7 @@ def get_lastday(current):
 # The script
 #
 for x in range(offsetMonth):
-	newFilePath = 'Data/' + sys.argv[i+3] + '-' + x + '.csv'
+	newFilePath = 'Data/' + sys.argv[i+3] + '-' + str(x) + '.csv'
 	try:
 	    os.remove(newFilePath)
 	except OSError:
@@ -92,7 +92,7 @@ for x in range(offsetMonth):
 		writer.writeheader()
 
 
-	print('Scraping month: ' + str(x+1) + ' of ' + str(offsetMonth))
-	tweets = scrapeWithRetry(endDate, x)
-	for tweet in tweets:
-		writer.writerow({'username': tweet.username.encode("utf-8"),  'date': tweet.date, 'text': tweet.text.encode("utf-8")})
+		print('Scraping month: ' + str(x+1) + ' of ' + str(offsetMonth))
+		tweets = scrapeWithRetry(endDate, x)
+		for tweet in tweets:
+			writer.writerow({'username': tweet.username.encode("utf-8"),  'date': tweet.date, 'text': tweet.text.encode("utf-8")})
