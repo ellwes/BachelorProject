@@ -2,18 +2,19 @@
 
 #VARIABLES
 #For scraping twitter
-SEARCH_QUERY="eog resources"
-START_DATE="2014-11-10"
-END_DATE="2018-01-07	" #format: YYYY-mm-dd
-OFFSET_MONTH=6
- #number of month before endDate
+SEARCH_QUERY="wells fargo" #"under armour"
+START_DATE="2017-01-21" #"2014-05-06"
+END_DATE="2018-04-01" #"2014-09-10" #format: YYYY-mm-dd
+OFFSET_MONTH=12 #number of month before endDate
 
 #For scraping reports
-COMPANY_CODE='EOG'    # company code for apple
+COMPANY_CODE='UA'    # company code for apple
+
 
 #For the rest
 ALGORITHM="VADER"
 SCRAPE_TWITTER=false
+CORRELATION=false
 S_A=true
 FILE_NAME="$(echo -e "${SEARCH_QUERY}" | tr -s '[:space:]' '_')${END_DATE}_$OFFSET_MONTH_$ALGORITHM"
 
@@ -29,7 +30,7 @@ fi
 
 if $S_A
 then
-python sentiment_analysis.py $FILE_NAME $COMPANY_CODE > Data/$FILE_NAME.dat
+python sentiment_analysis.py $FILE_NAME $COMPANY_CODE $CORRELATION > Data/$FILE_NAME.dat
 
 gnuplot << EOF
 	plot_quarter_data=1

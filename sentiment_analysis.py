@@ -16,6 +16,7 @@ descriptor1 = 'Total revenues'
 descriptor2 = 'Net income'
 descriptor3 = 'Diluted'
 
+correlation = sys.argv[3]
 
 #functions
 def extractNumbers(s):
@@ -67,6 +68,9 @@ with open(file_with_data, 'rb') as csvfile:
         sentences.insert(0, (datetime_object,row['text']))
 
 
+#Sort data
+sentences = sorted(sentences,key=lambda x: x[0])
+
 #Preformes the analysis
 dates_and_sentiments = []
 analyzer = SentimentIntensityAnalyzer()
@@ -87,22 +91,23 @@ for key, group in groupby(dates_and_sentiments, lambda x: str(x[0].strftime('%Y-
 
 
 
-#Puts all data in a csv-file in order to find the correlation c oefficient.
-newFilePath = 'Correlation/' + sys.argv[1] + '_correlation.csv'
-with open(newFilePath, 'w') as csvfile:
-    fieldnames = ['date', 'sentiment_value', descriptor1, descriptor2, descriptor3]
-    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-    writer.writeheader()
-    for score_day in score_avg_sentence_per_day:
-        res1 = ''
-        res2 = ''
-        res3 = ''
-        for res in results:
-            if res[0] == score_day[0]:
-                res1 = res[1]
-                res2 = res[2]
-                res3 = res[3]
-        writer.writerow({'date': score_day[0],  'sentiment_value': score_day[1], descriptor1: res1, descriptor2: res2, descriptor3: res3})
+#Puts all data in a csv-file in order to find the correlation coefficient.
+if (correlation):
+	newFilePath = 'Correlation/' + sys.argv[1] + '_correlation.csv'
+	with open(newFilePath, 'w') as csvfile:
+	    fieldnames = ['date', 'sentiment_value', descriptor1, descriptor2, descriptor3]
+	    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+	    writer.writeheader()
+	    for score_day in score_avg_sentence_per_day:
+		res1 = ''
+		res2 = ''
+		res3 = ''
+		for res in results:
+		    if res[0] == score_day[0]:
+		        res1 = res[1]
+		        res2 = res[2]
+		        res3 = res[3]
+		writer.writerow({'date': score_day[0],  'sentiment_value': score_day[1], descriptor1: res1, descriptor2: res2, descriptor3: res3})
 
 
 
