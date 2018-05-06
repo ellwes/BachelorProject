@@ -12,21 +12,32 @@ from datetime import datetime, timedelta
 import dateutil.relativedelta
 
 
-query = "nvidia"
+query = "wells fargo"
 
-startDate = "2015-07-22" #str. "yyyy-mm-dd"
-endDate = "2015-07-26" #str. "yyyy-mm-dd"
+startDateArg = "2018-01-08" #str. "yyyy-mm-dd"
+endDateArg = "2018-01-20" #str. "yyyy-mm-dd"
 
-newFilePath = 'Data/SIMPLE_' + query.replace(' ', '_') + '_' + startDate + '_' + endDate  + '.csv'
+newFilePath = 'Data/SIMPLE_' + query.replace(' ', '_') + '_' + startDateArg + '_' + endDateArg  + '.csv'
 
-
+startDate = datetime.strptime(startDateArg, '%Y-%m-%d').strftime('%Y-%m-%d')
+endDate = datetime.strptime(endDateArg, '%Y-%m-%d').strftime('%Y-%m-%d')
 tweets = []
-tweetCriteria = got.manager.TweetCriteria().setSince(startDate).setUntil(endDate).setQuerySearch(query)
-tweetsWithCriteria = got.manager.TweetManager.getTweets(tweetCriteria)
-for tweet in tweetsWithCriteria:
-    tweets.append(tweet)
 
+#Prep first day
+startScrapeDay = (datetime.strptime(endDate, '%Y-%m-%d') - dateutil.relativedelta.relativedelta(days=1)).strftime('%Y-%m-%d')
+endScrapeDay = endDate
+#Loop
+while (datetime.strptime(startDate, '%Y-%m-%d')).strftime('%Y-%m-%d') != startScrapeDay:
+	print("Scraping" + endScrapeDay + "   Target:" + startDate)
 
+	tweetCriteria = got.manager.TweetCriteria().setSince(startScrapeDay).setUntil(endScrapeDay).setQuerySearch(query)
+	tweetsWithCriteria = got.manager.TweetManager.getTweets(tweetCriteria)
+	for tweet in tweetsWithCriteria:
+	    tweets.append(tweet)
+
+	#Change day
+	startScrapeDay = (datetime.strptime(startScrapeDay, '%Y-%m-%d') - dateutil.relativedelta.relativedelta(days=1)).strftime('%Y-%m-%d')
+	endScrapeDay = (datetime.strptime(endScrapeDay, '%Y-%m-%d') - dateutil.relativedelta.relativedelta(days=1)).strftime('%Y-%m-%d')
 
 with open(newFilePath, 'w') as csvfile:
 	fieldnames = ['username', 'date', 'text']
@@ -35,3 +46,5 @@ with open(newFilePath, 'w') as csvfile:
 
 	for tweet in tweets:
 		writer.writerow({'username': tweet.username.encode("utf-8"),  'date': tweet.date, 'text': tweet.text.encode("utf-8")})
+
+
