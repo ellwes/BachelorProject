@@ -8,11 +8,10 @@ START_DATE="2015-07-22" #"2014-05-06"
 END_DATE="2015-07-26" #"2014-09-10" #format: YYYY-mm-dd
 
 FILE_NAME="SIMPLE_nvidia_2015-07-22_2015-07-26" #The file in which the tweets can be found.
-RESULT_FILE="NVDA-Q-10" #The file in which result can be found. Format: COMPANY_CODE-Q-10
 
 DAT_FILE_NAME="SIMPLE_nvidia_2015-07-22_2015-07-26" #The name of the dat-file (that will be used to create the graph)
 
-python sentiment_analysis_short.py $START_DATE $END_DATE $FILE_NAME $RESULT_FILE > Data/${DAT_FILE_NAME}.dat
+python sentiment_analysis_short.py $START_DATE $END_DATE $FILE_NAME > Data/${DAT_FILE_NAME}.dat
 
 
 gnuplot << EOF
