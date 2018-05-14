@@ -5,6 +5,7 @@ import csv
 import re
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from datetime import datetime
+import dateutil.relativedelta
 
 companyReports = "Reports/"
 tweetsPath = "Data/"
@@ -34,12 +35,13 @@ def PNRatio(filePath, startInterval, endInterval):
 				elif 0 < sentimentScore:
 					sentencePos.append(sentimentScore)
 		#calculate PNRatio
-		return sum(sentencePos) / sum(sentenceNeg)
+		print str(sum(sentencePos)) + ' ' + str(sum(sentenceNeg))
+		return abs(sum(sentencePos) / sum(sentenceNeg))
 
 def ProcessCompanyReport(filePath, newFilePath):
-	with open(filePath, 'rb') as csvfile:
+	with open(filePath, 'r') as csvinput:
 		with open(newFilePath, 'w') as csvoutput:
-			fileReader = csv.DictReader(csvfile)
+			fileReader = csv.DictReader(csvinput)
 
 			writer = csv.writer(csvoutput, lineterminator='\n')
 			reader = csv.reader(csvinput)
@@ -50,17 +52,17 @@ def ProcessCompanyReport(filePath, newFilePath):
 			all.append(row)
 
 			for row in reader:
-				datePressRelease = row['Date (press release)']
+				print row[0];
+				datePressRelease = row[1]
 				#Offsetdates
-				startInterval = datetime.strptime(datePressRelease, '%Y-%m-%d') - dateutil.relativedelta.relativedelta(days=2)
+				startInterval = datetime.strptime(datePressRelease, '%Y-%m-%d') - dateutil.relativedelta.relativedelta(days=0)
 				endInterval = datetime.strptime(datePressRelease, '%Y-%m-%d') + dateutil.relativedelta.relativedelta(days=2)
-				pnratio = PNRatio(tweetsPath + '/' + row['Tweets filename'], startInterval, endInterval)
+				pnratio = PNRatio(tweetsPath + '/' + row[8], startInterval, endInterval)
 				row.append(pnratio)
 				all.append(row)
 
 			writer.writerows(all)
-		
-#Process all files, append PNRatio based on their connected 
+
+#Process all files, append PNRatio based on their connected
 for filename in os.listdir(companyReports):
 	ProcessCompanyReport(companyReports + '/' + filename, filename + '_processed.csv')
-
